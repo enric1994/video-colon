@@ -20,7 +20,7 @@ def gen(dataset_version, total_videos):
         bpy.ops.object.delete()        
 
         # Create a bezier circle and enter edit mode.
-        bpy.ops.curve.primitive_bezier_circle_add(radius=1.0,
+        bpy.ops.curve.primitive_bezier_circle_add(radius=2.0,
                                             location=(0.0, 0.0, 0.0),
                                             enter_editmode=True)
 
@@ -34,7 +34,7 @@ def gen(dataset_version, total_videos):
         bpy.ops.transform.vertex_random(offset=1.0, uniform=0.1, normal=0.0, seed=0)
 
         # Scale the curve while in edit mode.
-        bpy.ops.transform.resize(value=(2.0, 2.0, 3.0))
+        bpy.ops.transform.resize(value=(2.0, 2.0, 2.0))
 
         # Return to object mode.
         bpy.ops.object.mode_set(mode='OBJECT')
@@ -53,6 +53,7 @@ def gen(dataset_version, total_videos):
         # Create camera
         bpy.ops.object.camera_add()
         camera = bpy.context.active_object
+        bpy.data.cameras['Camera.001'].clip_start = 0.001
         bpy.context.scene.camera = camera
         camera.rotation_mode = 'QUATERNION'
 
@@ -161,95 +162,120 @@ def gen(dataset_version, total_videos):
 
 
         # Set lighting
-        lighting_config = {'l2': {
-                'light_type': 'SUN',
-                'position': [0,0,10],
-                'rotation': [
-                    random.uniform(0,4),
-                    random.uniform(0,4),
-                    random.uniform(0,4)
-                ],
-                'energy': random.uniform(2,2),
-                'shadow': False,
-                'color': [
-                    1,1,1
-                ]
-            },
-            'l3': {
-                'light_type': 'POINT',
-                'position': [2.5,0,0],
-                'rotation': [
-                    random.uniform(0,4),
-                    random.uniform(0,4),
-                    random.uniform(0,4)
-                ],
-                'energy': random.uniform(0,1),
-                'shadow': False,
-                'color': [
-                    1,1,1
-                ]
-            },
-            'l4': {
-                'light_type': 'POINT',
-                'position': [3.5,0,0],
-                'rotation': [
-                    random.uniform(0,4),
-                    random.uniform(0,4),
-                    random.uniform(0,4)
-                ],
-                'energy': random.uniform(0,1),
-                'shadow': False,
-                'color': [
-                    1,1,1
-                ]
-            },
-            'negative_1': {
-                'light_type': 'POINT',
-                'position': [1.5,0,0],
-                'rotation': [
-                    0,0,0
-                ],
-                'negative_light': True,
-                'energy': random.uniform(0,1),
-                'shadow': False,
-                'color': [
-                    1,1,1
-                ]
-            },
-            'negative_2': {
-                'light_type': 'POINT',
-                'position': [1.5,0.2,0],
-                'rotation': [
-                    0,0,0
-                ],
-                'negative_light': True,
-                'energy': random.uniform(0,1),
-                'shadow': False,
-                'color': [
-                    1,1,1
-                ]
-            },
-             'negative_3': {
-                'light_type': 'POINT',
-                'position': [1.5,-0.2,0],
-                'rotation': [
-                    0,0,0
-                ],
-                'negative_light': True,
-                'energy': random.uniform(0,1),
-                'shadow': False,
-                'color': [
-                    1,1,1
-                ]
-            }
+    #     lighting_config = {'l2': {
+    #             'light_type': 'SUN',
+    #             'position': [0,0,10],
+    #             'rotation': [
+    #                 random.uniform(0,4),
+    #                 random.uniform(0,4),
+    #                 random.uniform(0,4)
+    #             ],
+    #             'energy': random.uniform(2,2),
+    #             'shadow': False,
+    #             'color': [
+    #                 1,1,1
+    #             ]
+    #         },
+    #         'l3': {
+    #             'light_type': 'POINT',
+    #             'position': [2.5,0,0],
+    #             'rotation': [
+    #                 random.uniform(0,4),
+    #                 random.uniform(0,4),
+    #                 random.uniform(0,4)
+    #             ],
+    #             'energy': random.uniform(0,1),
+    #             'shadow': False,
+    #             'color': [
+    #                 1,1,1
+    #             ]
+    #         },
+    #         'l4': {
+    #             'light_type': 'POINT',
+    #             'position': [3.5,0,0],
+    #             'rotation': [
+    #                 random.uniform(0,4),
+    #                 random.uniform(0,4),
+    #                 random.uniform(0,4)
+    #             ],
+    #             'energy': random.uniform(0,1),
+    #             'shadow': False,
+    #             'color': [
+    #                 1,1,1
+    #             ]
+    #         },
+    #         'negative_1': {
+    #             'light_type': 'POINT',
+    #             'position': [1.5,0,0],
+    #             'rotation': [
+    #                 0,0,0
+    #             ],
+    #             'negative_light': True,
+    #             'energy': random.uniform(0,1),
+    #             'shadow': False,
+    #             'color': [
+    #                 1,1,1
+    #             ]
+    #         },
+    #         'negative_2': {
+    #             'light_type': 'POINT',
+    #             'position': [1.5,0.2,0],
+    #             'rotation': [
+    #                 0,0,0
+    #             ],
+    #             'negative_light': True,
+    #             'energy': random.uniform(0,1),
+    #             'shadow': False,
+    #             'color': [
+    #                 1,1,1
+    #             ]
+    #         },
+    #          'negative_3': {
+    #             'light_type': 'POINT',
+    #             'position': [1.5,-0.2,0],
+    #             'rotation': [
+    #                 0,0,0
+    #             ],
+    #             'negative_light': True,
+    #             'energy': random.uniform(0,1),
+    #             'shadow': False,
+    #             'color': [
+    #                 1,1,1
+    #             ]
+    #         }
 
 
 
-        }
-        set_lighting(lighting_config)
+    #     }
+    #     def set_lighting(lighting_info):
+	# for light_name, light_data in lighting_info.items():
+	# 	lamp = bpy.context.active_object.data
+	# 	lamp.energy = light_data['energy']
+	# 	if 'color' in light_data:
+	# 		lamp.color = light_data['color']
+	# 	if 'negative_light' in light_data:
+	# 		lamp.use_negative = light_data['negative_light']
+	# 	if light_data['shadow']:
+	# 		lamp.shadow_method = 'RAY_SHADOW'
+	# 	if 'specular' in light_data:
+	# 		lamp.use_specular = light_data['specular']
+	# 	bpy.context.selected_objects[0].name = light_name
 
-        
+        for _ in range(0,random.randint(1,3)):
+            random_light_position = [
+                    random.uniform(0,0.1),
+                    random.uniform(0,0.1),
+                    random.uniform(0,0.1)
+                ]
 
+            bpy.ops.object.lamp_add(type='POINT', location=random_light_position)
+            lamp = bpy.context.active_object.data
+            lamp.shadow_method = 'RAY_SHADOW'
+            
+            bpy.ops.object.constraint_add(type='CHILD_OF')
+            bpy.data.objects[lamp.name].constraints['Child Of'].target=camera
+            # bpy.ops.object[lamp.name].constraints['Child Of'].target=camera
+    # bpy.data.objects['l1'].constraints['Child Of'].target
 
         # # # Save 3D object
         # blend_file_path = bpy.data.filepath
@@ -288,7 +314,7 @@ def gen(dataset_version, total_videos):
         # utils.render_keyframes('images', image_number, dataset_version)
 
         os.makedirs('/blender/datasets/{}/sequence_{}/frames'.format(dataset_version, str(video_id).zfill(8)), exist_ok=True)
-        for i in range(1, 250):
+        for i in tqdm(range(1, 250)):
             bpy.context.scene.frame_current = i
             bpy.context.scene.render.image_settings.file_format = 'PNG'
             bpy.context.scene.render.filepath = '/blender/datasets/{}/sequence_{}/frames/{}.png'.format(dataset_version, str(video_id).zfill(8), str(i).zfill(8)) 
