@@ -172,54 +172,54 @@ def gen(dataset_version, total_videos):
         # Apply material
         bpy.data.objects['BezierCircle'].data.materials.append(mat)
 
-        # num_polyps = random.randint(1,8)
+        num_polyps = 80 #random.randint(20,40)
         
-        # # Make polyps
-        # for i in range(0,num_polyps):
-        #     bpy.ops.object.mode_set(mode='OBJECT')
-        #     if i > 0:
-        #         object_name = 'Sphere.' + str(i).zfill(3)
-        #     else:
-        #         object_name = 'Sphere'
-        #     bpy.ops.mesh.primitive_uv_sphere_add(segments=128, ring_count=128, location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0))
+        # Make polyps
+        for i in range(0,num_polyps):
+            bpy.ops.object.mode_set(mode='OBJECT')
+            if i > 0:
+                object_name = 'Sphere.' + str(i).zfill(3)
+            else:
+                object_name = 'Sphere'
+            bpy.ops.mesh.primitive_uv_sphere_add(segments=64, ring_count=32, location=(0.0, 0.0, 0.0), rotation=(0.0, 0.0, 0.0))
 
-        #     bpy.data.objects[object_name].scale[0] = random.uniform(0.1, 0.5)
-        #     bpy.data.objects[object_name].scale[1] = random.uniform(0.1, 0.5)
-        #     bpy.data.objects[object_name].scale[2] = random.uniform(0.1, 0.5)
+            bpy.data.objects[object_name].scale[0] = random.uniform(0.5, 1)
+            bpy.data.objects[object_name].scale[1] = random.uniform(0.5, 1)
+            bpy.data.objects[object_name].scale[2] = random.uniform(0.5, 1)
 
-        #     bpy.data.objects[object_name].location[0] = base_location_x + random.uniform(-0.2, 0.2)
-        #     bpy.data.objects[object_name].location[1] = base_location_y + random.uniform(-0.2, 0.2)
-        #     bpy.data.objects[object_name].location[2] = base_location_z + random.uniform(-0.2, 0.2)
-        #     bpy.ops.object.mode_set(mode='EDIT')
-        #     bpy.ops.transform.vertex_random(offset=deformation/2, uniform=0.0, normal=0.0, seed=0)
-        #     bpy.ops.mesh.vertices_smooth()
-        #     bpy.ops.mesh.vertices_smooth()
-        #     bpy.ops.mesh.vertices_smooth()
-        #     bpy.ops.mesh.vertices_smooth()
-        #     # bpy.ops.mesh.vertices_smooth()
-        #     # bpy.ops.mesh.vertices_smooth()
-        #     bpy.ops.object.mode_set(mode='OBJECT')
+            bpy.data.objects[object_name].location[0] = random.uniform(-30, 30)
+            bpy.data.objects[object_name].location[1] = random.uniform(-30, 30)
+            bpy.data.objects[object_name].location[2] = random.uniform(-10, 10)
+            bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.transform.vertex_random(offset=deformation/10, uniform=0.0, normal=0.0, seed=0)
+            bpy.ops.mesh.vertices_smooth()
+            bpy.ops.mesh.vertices_smooth()
+            bpy.ops.mesh.vertices_smooth()
+            bpy.ops.mesh.vertices_smooth()
+            # bpy.ops.mesh.vertices_smooth()
+            # bpy.ops.mesh.vertices_smooth()
+            bpy.ops.object.mode_set(mode='OBJECT')
 
-        #     #Create material
-        #     # mat = bpy.data.materials.new(name="Material." + str(i))
-        #     # random_shade_1 = random.uniform(0.6,1.2)
-        #     # random_shade_2 = random.uniform(0.6,1.2)
-        #     # random_shade_3 = random.uniform(0.6,1.2)
-        #     # mat.diffuse_color=[0.800000 * random_shade_1, 0.18 * random_shade_2, 0.13 * random_shade_3]
+            #Create material
+            # mat = bpy.data.materials.new(name="Material." + str(i))
+            # random_shade_1 = random.uniform(0.6,1.2)
+            # random_shade_2 = random.uniform(0.6,1.2)
+            # random_shade_3 = random.uniform(0.6,1.2)
+            # mat.diffuse_color=[0.800000 * random_shade_1, 0.18 * random_shade_2, 0.13 * random_shade_3]
 
-        #     # tex = bpy.data.textures.new("SomeName." + str(i), 'IMAGE')
-        #     # img = bpy.data.images.load(filepath=plain_color('polyp'))
+            # tex = bpy.data.textures.new("SomeName." + str(i), 'IMAGE')
+            # img = bpy.data.images.load(filepath=plain_color('polyp'))
 
-        #     # tex.image = img
-        #     # # tex.texture_coords = 'WINDOW'
+            # tex.image = img
+            # # tex.texture_coords = 'WINDOW'
 
-        #     # slot = mat.texture_slots.add()
-        #     # slot.texture = tex
-        #     # slot.texture_coords = 'GLOBAL'
+            # slot = mat.texture_slots.add()
+            # slot.texture = tex
+            # slot.texture_coords = 'GLOBAL'
 
 
-        #     # Apply material
-        #     bpy.data.objects[object_name].data.materials.append(mat)
+            # Apply material
+            bpy.data.objects[object_name].data.materials.append(mat)
 
 
         # Set lighting
@@ -321,17 +321,18 @@ def gen(dataset_version, total_videos):
 	# 	if 'specular' in light_data:
 	# 		lamp.use_specular = light_data['specular']
 	# 	bpy.context.selected_objects[0].name = light_name
-
-        for _ in range(0,random.randint(1,3)):
+        num_lights = random.randint(2,4)
+        for _ in range(0, num_lights):
             random_light_position = [
-                    random.uniform(0,0.1),
-                    random.uniform(0,0.1),
-                    random.uniform(0,0.1)
+                    random.uniform(0,0.5),
+                    random.uniform(0,0.5),
+                    random.uniform(0,0.5)
                 ]
 
             bpy.ops.object.lamp_add(type='POINT', location=random_light_position)
             lamp = bpy.context.active_object.data
             lamp.shadow_method = 'RAY_SHADOW'
+            lamp.energy = random.uniform(0.5,1)
             
             bpy.ops.object.constraint_add(type='CHILD_OF')
             bpy.data.objects[lamp.name].constraints['Child Of'].target=camera
@@ -369,33 +370,44 @@ def gen(dataset_version, total_videos):
         # os.rename(source_file, target_file)
 
 
+        
         utils.save_project('/blender/scene.blend')
 
         # # Render
 
-        # os.makedirs('/blender/datasets/{}/sequence_{}/frames'.format(dataset_version, str(video_id).zfill(8)), exist_ok=True)
-        # for i in tqdm(range(1, 1000)):
-        #     bpy.context.scene.frame_current = i
-        #     bpy.context.scene.render.image_settings.file_format = 'PNG'
-        #     bpy.context.scene.render.filepath = '/blender/datasets/{}/sequence_{}/frames/{}.png'.format(dataset_version, str(video_id).zfill(8), str(i).zfill(8)) 
-        #     bpy.ops.render.render(write_still=True)
+        os.makedirs('/blender/datasets/{}/sequence_{}/frames'.format(dataset_version, str(video_id).zfill(8)), exist_ok=True)
+        for i in tqdm(range(1, 1000)):
+            bpy.context.scene.frame_current = i
+            bpy.context.scene.render.image_settings.file_format = 'PNG'
+            bpy.context.scene.render.filepath = '/blender/datasets/{}/sequence_{}/frames/{}.png'.format(dataset_version, str(video_id).zfill(8), str(i).zfill(8)) 
+            bpy.ops.render.render(write_still=True)
 
         # # Render mask
-        # bpy.data.worlds['World'].horizon_color=(0,0,0)
-        # for light_name in lighting_config.keys():
-        #     bpy.data.objects[light_name].hide_render=True
+        bpy.data.worlds['World'].horizon_color=(0,0,0)
+        for light_number in range(0,num_lights):
+            light_name = 'Point.' + str(light_number).zfill(3)
+            if light_number == 0:
+                light_name = 'Point'
+            bpy.data.objects[light_name].hide_render=True
 
-        # for i in range(0,num_polyps):
-        #     if i > 0:
-        #         object_name = 'Sphere.' + str(i).zfill(3)
-        #     else:
-        #         object_name = 'Sphere'
-        #     for slot in bpy.data.objects[object_name].material_slots:
-        #         new_mat = bpy.data.materials.new(name="Mask")
-        #         new_mat.diffuse_color = (1,1,1)
-        #         slot.material = new_mat
-        #         slot.material.use_shadeless=True
-                
+        for i in range(0,num_polyps):
+            object_name = 'Sphere.' + str(i).zfill(3)
+            if i == 0:
+                object_name = 'Sphere'
+            for slot in bpy.data.objects[object_name].material_slots:
+                new_mat = bpy.data.materials.new(name="Mask")
+                new_mat.diffuse_color = (1,1,1)
+                slot.material = new_mat
+                slot.material.use_shadeless=True
+        
+        os.makedirs('/blender/datasets/{}/sequence_{}/masks'.format(dataset_version, str(video_id).zfill(8)), exist_ok=True)
+        for i in tqdm(range(1, 1000)):
+            bpy.context.scene.frame_current = i
+            bpy.context.scene.render.image_settings.file_format = 'PNG'
+            bpy.context.scene.render.filepath = '/blender/datasets/{}/sequence_{}/masks/{}.png'.format(dataset_version, str(video_id).zfill(8), str(i).zfill(8)) 
+            bpy.ops.render.render(write_still=True)
+
+
         # # Hide other objects
         # # bpy.data.objects['MyCurveObject'].hide_render=True
 
