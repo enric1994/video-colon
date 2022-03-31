@@ -5,7 +5,7 @@ services:
   blender:
     image: blender
     container_name: blender
-    working_dir: /blender/synth/src
+    working_dir: /blender/src
     build:
       context: ../
       dockerfile: docker/Dockerfile.blender
