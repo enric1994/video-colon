@@ -1,8 +1,7 @@
 # video-colon
 
 ![Alt Text](demo.gif)
-
-
+![Alt Text](demo.png)
 
 # Setup
 In order to run the code [Docker and Docker-Compose](https://gist.github.com/enric1994/3b5c20ddb2b4033c4498b92a71d909da) are required. 

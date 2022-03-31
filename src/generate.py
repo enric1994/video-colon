@@ -2,7 +2,6 @@ import argparse
 import bpy
 from mathutils import Euler, Matrix, Quaternion, Vector
 import random
-import blender_utils as utils
 import os
 import sys
 import numpy as np
@@ -212,7 +211,7 @@ def gen(dataset_version, total_videos):
 
 
         # Save project
-        utils.save_project('/blender/scene.blend')
+        bpy.ops.wm.save_as_mainfile(filepath='/blender/scene.blend')
 
         # Render frames
         os.makedirs('/blender/datasets/{}/sequence_{}/frames'.format(dataset_version, str(video_id).zfill(8)), exist_ok=True)
@@ -248,7 +247,7 @@ def gen(dataset_version, total_videos):
             bpy.ops.render.render(write_still=True)
 
         # Reset
-        bpy.ops.wm.read_factory_settings(use_empty=True)
+        bpy.ops.wm.read_factory_settings(use_empty=False)
 
 def mute():
 	# Redirect output to log file
