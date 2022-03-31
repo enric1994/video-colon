@@ -19,6 +19,11 @@ def gen(dataset_version, total_videos):
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.object.delete()        
 
+        # Set resolution
+        bpy.data.scenes['Scene'].render.resolution_x = 500
+        bpy.data.scenes['Scene'].render.resolution_y = 500
+        bpy.data.scenes['Scene'].render.resolution_percentage = 100
+
         # Create a bezier circle and enter edit mode.
         bpy.ops.curve.primitive_bezier_circle_add(radius=2.0,
                                             location=(0.0, 0.0, 0.0),
@@ -34,7 +39,7 @@ def gen(dataset_version, total_videos):
         bpy.ops.transform.vertex_random(offset=1.0, uniform=0.1, normal=0.0, seed=0)
 
         # Scale the curve while in edit mode.
-        bpy.ops.transform.resize(value=(2.0, 2.0, 2.0))
+        bpy.ops.transform.resize(value=(10.0, 10.0, 10.0))
 
         # Return to object mode.
         bpy.ops.object.mode_set(mode='OBJECT')
@@ -54,14 +59,15 @@ def gen(dataset_version, total_videos):
         bpy.ops.object.camera_add()
         camera = bpy.context.active_object
         bpy.data.cameras['Camera.001'].clip_start = 0.001
+        bpy.data.cameras['Camera.001'].lens = 10 #5-20
         bpy.context.scene.camera = camera
         camera.rotation_mode = 'QUATERNION'
 
         # Create three keyframes for each bezier point.
         key_frame_count = 3.0 * len(bezier_points)
         scene = bpy.context.scene
-        frame_start = scene.frame_start
-        frame_end = scene.frame_end
+        frame_start = 0
+        frame_end = 1000
         frame_len = frame_end - frame_start
         frame_skip = int(max(1.0, frame_len / key_frame_count))
         frame_range = range(frame_start, frame_end, frame_skip)
@@ -99,18 +105,73 @@ def gen(dataset_version, total_videos):
         # Which parts of the curve to extrude ['HALF', 'FRONT', 'BACK', 'FULL'].
         obj_data.fill_mode = 'FULL'
 
+        # Animation duration
+        # obj_data.path_duration = 1000
+
+        # Resolution
+        obj_data.bevel_resolution = 5
+
         # Breadth of extrusion.
-        obj_data.extrude = 0.1
+        # obj_data.extrude = 0.2
 
         # Depth of extrusion.
-        obj_data.bevel_depth = 0.2
+        obj_data.bevel_depth = 2
 
         # Smoothness of the segments on the curve.
         obj_data.resolution_u = 20
         obj_data.render_resolution_u = 20
 
-#
+        # Convert to mesh
+        # curve = bpy.context.active_object
+
+        bpy.data.objects['BezierCircle'].select = True
+
+        bpy.ops.object.convert(target='MESH')
+
+        for obj in bpy.context.selected_objects:
+            obj.select = False
         
+        bpy.context.scene.objects.active = bpy.data.objects['BezierCircle']
+
+        bpy.ops.object.mode_set(mode='EDIT')
+        bpy.ops.mesh.select_all(action = 'SELECT')
+
+        deformation = 2 #random.uniform(0,0.15)
+        bpy.ops.transform.vertex_random(offset=deformation, uniform=0.0, normal=0.0, seed=0)
+        bpy.ops.mesh.vertices_smooth()
+        bpy.ops.mesh.vertices_smooth()
+        # bpy.ops.mesh.vertices_smooth()
+        # bpy.ops.mesh.vertices_smooth()
+        # bpy.ops.mesh.vertices_smooth()
+        # bpy.ops.mesh.vertices_smooth()
+        bpy.ops.object.mode_set(mode='OBJECT')
+
+
+#
+
+        # Material
+
+        mat = bpy.data.materials.new(name="Material")
+        random_shade_1 = random.uniform(0.8,1.2)
+        random_shade_2 = random.uniform(0.8,1.2)
+        random_shade_3 = random.uniform(0.8,1.2)
+        mat.diffuse_color=[0.800000 * random_shade_1, 0.18 * random_shade_2, 0.13 * random_shade_3]
+
+        # tex = bpy.data.textures.new("SomeName", 'IMAGE')
+        # img = bpy.data.images.load(filepath=plain_color('colon'))
+
+        # tex.image = img
+        # # tex.texture_coords = 'WINDOW'
+
+        # slot = mat.texture_slots.add()
+        # slot.texture = tex
+        # # slot.texture_coords = 'OBJECT'
+        # slot.texture_coords='GLOBAL'
+        # import pdb;pdb.set_trace()
+
+        # Apply material
+        bpy.data.objects['BezierCircle'].data.materials.append(mat)
+
         # num_polyps = random.randint(1,8)
         
         # # Make polyps
@@ -311,14 +372,13 @@ def gen(dataset_version, total_videos):
         utils.save_project('/blender/scene.blend')
 
         # # Render
-        # utils.render_keyframes('images', image_number, dataset_version)
 
-        os.makedirs('/blender/datasets/{}/sequence_{}/frames'.format(dataset_version, str(video_id).zfill(8)), exist_ok=True)
-        for i in tqdm(range(1, 250)):
-            bpy.context.scene.frame_current = i
-            bpy.context.scene.render.image_settings.file_format = 'PNG'
-            bpy.context.scene.render.filepath = '/blender/datasets/{}/sequence_{}/frames/{}.png'.format(dataset_version, str(video_id).zfill(8), str(i).zfill(8)) 
-            bpy.ops.render.render(write_still=True)
+        # os.makedirs('/blender/datasets/{}/sequence_{}/frames'.format(dataset_version, str(video_id).zfill(8)), exist_ok=True)
+        # for i in tqdm(range(1, 1000)):
+        #     bpy.context.scene.frame_current = i
+        #     bpy.context.scene.render.image_settings.file_format = 'PNG'
+        #     bpy.context.scene.render.filepath = '/blender/datasets/{}/sequence_{}/frames/{}.png'.format(dataset_version, str(video_id).zfill(8), str(i).zfill(8)) 
+        #     bpy.ops.render.render(write_still=True)
 
         # # Render mask
         # bpy.data.worlds['World'].horizon_color=(0,0,0)
